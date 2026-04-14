@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/mdp/qrterminal/v3"
 )
 
 func main() {
@@ -44,6 +45,17 @@ func main() {
 	}
 	fmt.Printf("🚀 Accessible via   : http://%s:3030\n", localIP)
 	fmt.Println("========================================")
+
+	fmt.Println("QR Code:")
+	config := qrterminal.Config{
+		Level:     qrterminal.L,
+		Writer:    os.Stdout,
+		BlackChar: qrterminal.BLACK,
+		WhiteChar: qrterminal.WHITE,
+		QuietZone: 2,
+	}
+	qrterminal.GenerateWithConfig("http://"+localIP+":3030", config)
+
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Serving: " + absPath)
