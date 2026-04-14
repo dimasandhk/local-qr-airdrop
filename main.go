@@ -1,20 +1,52 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net"
-	"fmt"
+	"os"
+	"path/filepath"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func main() {
-	app := fiber.New()
+	if len(os.Args) < 2 {
+		fmt.Println("Usage: local-qr-airdrop <path-to-file-or-folder>")
+		os.Exit(1)
+	}
+
+	inputPath := os.Args[1]
+
+	// filepath.Abs automatically handles relative vs absolute paths
+	absPath, err := filepath.Abs(inputPath)
+	if err != nil {
+		log.Fatalf("Error resolving path: %v", err)
+	}
+
+	info, err := os.Stat(absPath)
+	if os.IsNotExist(err) {
+		log.Fatalf("Error: The path '%s' does not exist.", absPath)
+	} else if err != nil {
+		log.Fatalf("Error accessing path: %v", err)
+	}
+
+	app := fiber.New(fiber.Config{
+		DisableStartupMessage: true,
+	})
+
 	localIP := getLocalIPs()
-	fmt.Println("accessible via http://" + localIP + ":3030")
+	fmt.Println("========================================")
+	if info.IsDir() {
+		fmt.Printf("🎯 Target Directory : %s\n", absPath)
+	} else {
+		fmt.Printf("🎯 Target File      : %s\n", absPath)
+	}
+	fmt.Printf("🚀 Accessible via   : http://%s:3030\n", localIP)
+	fmt.Println("========================================")
 
 	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World! from " + localIP)
+		return c.SendString("Serving: " + absPath)
 	})
 
 	log.Fatal(app.Listen("[::]:3030"))
