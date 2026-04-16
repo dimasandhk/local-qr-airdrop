@@ -1,12 +1,13 @@
 package network
 
 import (
-	"fmt"
 	"net"
 )
 
 func GetLocalIP() string {
 	ifaces, _ := net.Interfaces()
+	var fallbackIP string
+
 	for _, i := range ifaces {
 		addrs, _ := i.Addrs()
 		for _, addr := range addrs {
@@ -20,12 +21,14 @@ func GetLocalIP() string {
 
 			// Filter: IPv4 only, no loopback, no dummy APIPA
 			if ip != nil && ip.To4() != nil && !ip.IsLoopback() && !ip.IsLinkLocalUnicast() {
-				fmt.Printf("[%s] -> http://%s:3030\n", i.Name, ip.String())
-				if i.Name == "Wi-Fi" {
+				if fallbackIP == "" {
+					fallbackIP = ip.String()
+				}
+				if i.Name == "Wi-Fi" || i.Name == "wlan0" || i.Name == "en0" || i.Name == "wl0" {
 					return ip.String()
 				}
 			}
 		}
 	}
-	return ""
+	return fallbackIP
 }
