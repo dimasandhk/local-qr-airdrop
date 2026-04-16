@@ -3,12 +3,12 @@ package main
 import (
 	"fmt"
 	"log"
-	"net"
 	"os"
 	"path/filepath"
 
+	"github.com/dimasandhk/local-qr-airdrop/internal/network"
+	"github.com/dimasandhk/local-qr-airdrop/internal/terminal"
 	"github.com/gofiber/fiber/v2"
-	"github.com/mdp/qrterminal/v3"
 )
 
 func main() {
@@ -36,7 +36,8 @@ func main() {
 		DisableStartupMessage: true,
 	})
 
-	localIP := getLocalIPs()
+	localIP := network.GetLocalIP()
+	
 	fmt.Println("========================================")
 	if info.IsDir() {
 		fmt.Printf("🎯 Target Directory : %s\n", absPath)
@@ -46,47 +47,20 @@ func main() {
 	fmt.Printf("🚀 Accessible via   : http://%s:3030\n", localIP)
 	fmt.Println("========================================")
 
-	fmt.Println("QR Code:")
-	config := qrterminal.Config{
-		Level:     qrterminal.L,
-		Writer:    os.Stdout,
-		BlackChar: qrterminal.BLACK,
-		WhiteChar: qrterminal.WHITE,
-		QuietZone: 2,
+	terminal.PrintQRCode("http://" + localIP + ":3030")
+
+	// Serve either a single file or a whole directory based on user input
+	if info.IsDir() {
+		// Serve all files inside the directory
+		app.Static("/", absPath, fiber.Static{
+			Browse: true, // Enables a built-in file browser UI
+		})
+	} else {
+		// Serve the single file directly on the root path
+		app.Get("/", func(c *fiber.Ctx) error {
+			return c.SendFile(absPath)
+		})
 	}
-	qrterminal.GenerateWithConfig("http://"+localIP+":3030", config)
-
-
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Serving: " + absPath)
-	})
 
 	log.Fatal(app.Listen("[::]:3030"))
 }
-
-func getLocalIPs() string {
-	ifaces, _ := net.Interfaces()
-	for _, i := range ifaces {
-		addrs, _ := i.Addrs()
-		for _, addr := range addrs {
-			var ip net.IP
-			switch v := addr.(type) {
-			case *net.IPNet:
-				ip = v.IP
-			case *net.IPAddr:
-				ip = v.IP
-			}
-			
-			// Filter: IPv4 only, no loopback, no dummy APIPA
-			if ip != nil && ip.To4() != nil && !ip.IsLoopback() && !ip.IsLinkLocalUnicast() {
-				fmt.Printf("[%s] -> http://%s:3030\n", i.Name, ip.String())
-				if i.Name == "Wi-Fi" {
-					return ip.String()
-				}
-			}
-		}
-	}
-	return ""
-}
-
-
