@@ -4,6 +4,7 @@ go 1.25.1
 
 require (
 	github.com/andybalholm/brotli v1.2.1 // indirect
+	github.com/atotto/clipboard v0.1.4 // indirect
 	github.com/clipperhouse/uax29/v2 v2.7.0 // indirect
 	github.com/gofiber/fiber/v2 v2.52.12 // indirect
 	github.com/google/uuid v1.6.0 // indirect

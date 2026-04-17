@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/atotto/clipboard"
 	"github.com/dimasandhk/local-qr-airdrop/internal/network"
 	"github.com/dimasandhk/local-qr-airdrop/internal/terminal"
 	"github.com/gofiber/fiber/v2"
@@ -37,17 +38,26 @@ func main() {
 	})
 
 	localIP := network.GetLocalIP()
-	
+
+	serverURL := "http://" + localIP + ":3030"
+
 	fmt.Println("========================================")
 	if info.IsDir() {
 		fmt.Printf("🎯 Target Directory : %s\n", absPath)
 	} else {
 		fmt.Printf("🎯 Target File      : %s\n", absPath)
 	}
-	fmt.Printf("🚀 Accessible via   : http://%s:3030\n", localIP)
+	fmt.Printf("🚀 Accessible via   : %s\n", serverURL)
+
+	// Attempt to copy the URL to the clipboard, silently ignore errors
+	err = clipboard.WriteAll(serverURL)
+	if err == nil {
+		fmt.Println("📋 URL copied to clipboard!")
+	}
+
 	fmt.Println("========================================")
 
-	terminal.PrintQRCode("http://" + localIP + ":3030")
+	terminal.PrintQRCode(serverURL)
 
 	// Serve either a single file or a whole directory based on user input
 	if info.IsDir() {
