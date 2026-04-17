@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -13,12 +14,24 @@ import (
 )
 
 func main() {
-	if len(os.Args) < 2 {
-		fmt.Println("Usage: local-qr-airdrop <path-to-file-or-folder>")
+	var port int
+	flag.IntVar(&port, "port", 3030, "Port to run the server on")
+	flag.IntVar(&port, "p", 3030, "Port to run the server on (shorthand)")
+
+	flag.Usage = func() {
+		fmt.Println("Usage: local-qr-airdrop [options] <path-to-file-or-folder>")
+		fmt.Println("Options:")
+		flag.PrintDefaults()
+	}
+
+	flag.Parse()
+
+	if flag.NArg() < 1 {
+		flag.Usage()
 		os.Exit(1)
 	}
 
-	inputPath := os.Args[1]
+	inputPath := flag.Arg(0)
 
 	// filepath.Abs automatically handles relative vs absolute paths
 	absPath, err := filepath.Abs(inputPath)
@@ -37,9 +50,9 @@ func main() {
 		DisableStartupMessage: true,
 	})
 
-	localIP := network.GetLocalIP()
+	localIP := network.GetLocalIP(port)
 
-	serverURL := "http://" + localIP + ":3030"
+	serverURL := fmt.Sprintf("http://%s:%d", localIP, port)
 
 	fmt.Println("========================================")
 	if info.IsDir() {
@@ -72,5 +85,5 @@ func main() {
 		})
 	}
 
-	log.Fatal(app.Listen("[::]:3030"))
+	log.Fatal(app.Listen(fmt.Sprintf("[::]:%d", port)))
 }

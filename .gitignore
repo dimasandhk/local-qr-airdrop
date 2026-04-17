@@ -1,2 +1,9 @@
 awikwok.txt
 /gambar
+
+# Builds
+main
+*.exe
+
+# Logs
+*.log
