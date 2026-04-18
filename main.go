@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -13,12 +14,28 @@ import (
 )
 
 func main() {
-	if len(os.Args) < 2 {
-		fmt.Println("Usage: local-qr-airdrop <path-to-file-or-folder>")
+	port := flag.Int("port", 3030, "Port to run the local server on")
+
+	flag.Usage = func() {
+		fmt.Println("🚀 local-qr-airdrop - Share files instantly to your phone via QR code")
+		fmt.Println("\nUsage:")
+		fmt.Println("  local-qr-airdrop [options] <path-to-file-or-folder>")
+		fmt.Println("\nOptions:")
+		flag.PrintDefaults()
+		fmt.Println("\nExamples:")
+		fmt.Println("  local-qr-airdrop ./secrets.txt        # Share a single file")
+		fmt.Println("  local-qr-airdrop ./my-folder          # Share a whole folder")
+		fmt.Println("  local-qr-airdrop -port 8080 ./file.go # Run on port 8080")
+	}
+
+	flag.Parse()
+
+	if flag.NArg() < 1 {
+		flag.Usage()
 		os.Exit(1)
 	}
 
-	inputPath := os.Args[1]
+	inputPath := flag.Arg(0)
 
 	// filepath.Abs automatically handles relative vs absolute paths
 	absPath, err := filepath.Abs(inputPath)
@@ -37,9 +54,9 @@ func main() {
 		DisableStartupMessage: true,
 	})
 
-	localIP := network.GetLocalIP()
+	localIP := network.GetLocalIP(*port)
 
-	serverURL := "http://" + localIP + ":3030"
+	serverURL := fmt.Sprintf("http://%s:%d", localIP, *port)
 
 	fmt.Println("========================================")
 	if info.IsDir() {
@@ -72,5 +89,5 @@ func main() {
 		})
 	}
 
-	log.Fatal(app.Listen("[::]:3030"))
+	log.Fatal(app.Listen(fmt.Sprintf("[::]:%d", *port)))
 }
