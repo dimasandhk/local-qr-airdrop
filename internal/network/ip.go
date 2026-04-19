@@ -5,7 +5,7 @@ import (
 	"net"
 )
 
-func GetLocalIP() string {
+func GetLocalIP(port int) string {
 	ifaces, _ := net.Interfaces()
 	var fallbackIP string
 	for _, i := range ifaces {
@@ -21,7 +21,7 @@ func GetLocalIP() string {
 
 			// Filter: IPv4 only, no loopback, no dummy APIPA
 			if ip != nil && ip.To4() != nil && !ip.IsLoopback() && !ip.IsLinkLocalUnicast() {
-				fmt.Printf("[%s] -> http://%s:3030\n", i.Name, ip.String())
+				fmt.Printf("[%s] -> http://%s:%d\n", i.Name, ip.String(), port)
 				if fallbackIP == "" {
 					fallbackIP = ip.String()
 				}
