@@ -11,6 +11,7 @@ import (
 	"github.com/dimasandhk/local-qr-airdrop/internal/network"
 	"github.com/dimasandhk/local-qr-airdrop/internal/terminal"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 )
 
 func main() {
@@ -49,6 +50,11 @@ func main() {
 	app := fiber.New(fiber.Config{
 		DisableStartupMessage: true,
 	})
+
+	app.Use(logger.New(logger.Config{
+		Format:     "🕒 ${time} | 📱 ${ip} | 📝 ${status} - ${method} ${path}\n",
+		TimeFormat: "15:04:05",
+	}))
 
 	localIP := network.GetLocalIP(port)
 
