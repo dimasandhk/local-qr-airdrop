@@ -16,8 +16,11 @@ import (
 
 func main() {
 	var port int
+	var receiveMode bool
 	flag.IntVar(&port, "port", 3030, "Port to run the server on")
 	flag.IntVar(&port, "p", 3030, "Port to run the server on (shorthand)")
+	flag.BoolVar(&receiveMode, "receive", false, "Enable receive mode to upload files to PC")
+	flag.BoolVar(&receiveMode, "r", false, "Enable receive mode to upload files to PC (shorthand)")
 
 	flag.Usage = func() {
 		fmt.Println("Usage: local-qr-airdrop [options] <path-to-file-or-folder>")
@@ -47,6 +50,10 @@ func main() {
 		log.Fatalf("Error accessing path: %v", err)
 	}
 
+	if receiveMode && !info.IsDir() {
+		log.Fatalf("Error: Receive mode requires a directory path, not a file.")
+	}
+
 	app := fiber.New(fiber.Config{
 		DisableStartupMessage: true,
 	})
@@ -61,7 +68,10 @@ func main() {
 	serverURL := fmt.Sprintf("http://%s:%d", localIP, port)
 
 	fmt.Println("========================================")
-	if info.IsDir() {
+	if receiveMode {
+		fmt.Printf("📥 Receive Mode     : ACTIVE\n")
+		fmt.Printf("🎯 Save Directory   : %s\n", absPath)
+	} else if info.IsDir() {
 		fmt.Printf("🎯 Target Directory : %s\n", absPath)
 	} else {
 		fmt.Printf("🎯 Target File      : %s\n", absPath)
@@ -79,7 +89,65 @@ func main() {
 	terminal.PrintQRCode(serverURL)
 
 	// Serve either a single file or a whole directory based on user input
-	if info.IsDir() {
+	if receiveMode {
+		app.Get("/", func(c *fiber.Ctx) error {
+			html := `<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<style>
+		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
+		.btn { background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; width: 100%; cursor: pointer; }
+		.btn:hover { background: #0056b3; }
+		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%; box-sizing: border-box; }
+		.card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+	</style>
+</head>
+<body>
+	<div class="card">
+		<h2>📥 Send File to PC</h2>
+		<p>Select a file from your device to send.</p>
+		<form action="/upload" method="post" enctype="multipart/form-data">
+			<input type="file" name="file" required><br>
+			<input type="submit" value="Upload File" class="btn">
+		</form>
+	</div>
+</body>
+</html>`
+			return c.Type("html").SendString(html)
+		})
+
+		app.Post("/upload", func(c *fiber.Ctx) error {
+			file, err := c.FormFile("file")
+			if err != nil {
+				return c.Status(400).SendString("Error uploading file")
+			}
+
+			savePath := filepath.Join(absPath, filepath.Base(file.Filename))
+			err = c.SaveFile(file, savePath)
+			if err != nil {
+				return c.Status(500).SendString("Error saving file")
+			}
+
+			successHtml := fmt.Sprintf(`<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<style>
+		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
+		.btn { background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; text-decoration: none; display: inline-block; }
+		.btn:hover { background: #218838; }
+	</style>
+</head>
+<body>
+	<h2>✅ Success!</h2>
+	<p>Successfully uploaded: <strong>%s</strong></p>
+	<a href="/" class="btn">Upload Another File</a>
+</body>
+</html>`, file.Filename)
+			return c.Type("html").SendString(successHtml)
+		})
+	} else if info.IsDir() {
 		// Serve all files inside the directory
 		app.Static("/", absPath, fiber.Static{
 			Browse: true, // Enables a built-in file browser UI
