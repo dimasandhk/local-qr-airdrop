@@ -4,3 +4,6 @@
 ## 2025-04-20 - Bidirectional File Transfer
 **Learning:** For a local file-sharing utility, the ability to send files is only half the user journey. The "missing link" was bidirectional transfer—allowing users to seamlessly pull files from a device to the host without requiring complex FTP or cloud setups.
 **Action:** When evaluating simple server utilities, always consider if the inverse operation (e.g., upload vs download) can be implemented with minimal overhead to double the utility of the application.
+## 2026-04-23 - Fiber Body Limit configuration
+**Learning:** The default Fiber web server configuration limits request bodies to 4MB, which silently blocks large file uploads in a utility meant for data transfer.
+**Action:** When setting up endpoints for handling file transfers using frameworks like Fiber, remember to configure the BodyLimit explicitly based on expected file sizes (e.g., 100MB).
