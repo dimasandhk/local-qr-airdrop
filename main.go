@@ -56,6 +56,7 @@ func main() {
 
 	app := fiber.New(fiber.Config{
 		DisableStartupMessage: true,
+		BodyLimit:             100 * 1024 * 1024,
 	})
 
 	app.Use(logger.New(logger.Config{
@@ -96,12 +97,26 @@ func main() {
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
-		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
+		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; transition: background 0.3s, color 0.3s; }
+		body.dark-mode { background: #121212; color: #ffffff; }
 		.btn { background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; width: 100%; cursor: pointer; }
 		.btn:hover { background: #0056b3; }
-		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%; box-sizing: border-box; }
-		.card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%; box-sizing: border-box; transition: background 0.3s, color 0.3s; }
+		.card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); transition: background 0.3s, border-color 0.3s; }
+		.dark-mode .card { background: #1e1e1e; border-color: #333; }
+		.dark-mode input[type=file] { color: #fff; background: #333; border-color: #555; }
 	</style>
+	<script>
+		function toggleDarkMode() {
+			document.body.classList.toggle('dark-mode');
+			localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+		}
+		window.onload = function() {
+			if (localStorage.getItem('darkMode') === 'true') {
+				document.body.classList.add('dark-mode');
+			}
+		}
+	</script>
 </head>
 <body>
 	<div class="card">
@@ -111,6 +126,7 @@ func main() {
 			<input type="file" name="file" required><br>
 			<input type="submit" value="Upload File" class="btn">
 		</form>
+		<button type="button" onclick="toggleDarkMode()" class="btn" style="background:#555; margin-top:10px;">Toggle Dark Mode</button>
 	</div>
 </body>
 </html>`
@@ -134,15 +150,28 @@ func main() {
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
-		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
+		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; transition: background 0.3s, color 0.3s; }
+		body.dark-mode { background: #121212; color: #ffffff; }
 		.btn { background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; text-decoration: none; display: inline-block; }
 		.btn:hover { background: #218838; }
 	</style>
+	<script>
+		function toggleDarkMode() {
+			document.body.classList.toggle('dark-mode');
+			localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+		}
+		window.onload = function() {
+			if (localStorage.getItem('darkMode') === 'true') {
+				document.body.classList.add('dark-mode');
+			}
+		}
+	</script>
 </head>
 <body>
 	<h2>✅ Success!</h2>
 	<p>Successfully uploaded: <strong>%s</strong></p>
 	<a href="/" class="btn">Upload Another File</a>
+	<button type="button" onclick="toggleDarkMode()" class="btn" style="background:#555; margin-top:10px; width:100%%; box-sizing: border-box;">Toggle Dark Mode</button>
 </body>
 </html>`, file.Filename)
 			return c.Type("html").SendString(successHtml)
