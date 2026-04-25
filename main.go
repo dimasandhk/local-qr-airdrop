@@ -94,6 +94,7 @@ func main() {
 			html := `<!DOCTYPE html>
 <html>
 <head>
+	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
 		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
@@ -101,6 +102,11 @@ func main() {
 		.btn:hover { background: #0056b3; }
 		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%; box-sizing: border-box; }
 		.card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+		@media (prefers-color-scheme: dark) {
+			body { background-color: #121212; color: #ffffff; }
+			input[type=file] { background-color: #1e1e1e; color: #ffffff; border-color: #444; }
+			.card { background-color: #1e1e1e; border-color: #333; }
+		}
 	</style>
 </head>
 <body>
@@ -132,11 +138,15 @@ func main() {
 			successHtml := fmt.Sprintf(`<!DOCTYPE html>
 <html>
 <head>
+	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
 		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
 		.btn { background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; text-decoration: none; display: inline-block; }
 		.btn:hover { background: #218838; }
+		@media (prefers-color-scheme: dark) {
+			body { background-color: #121212; color: #ffffff; }
+		}
 	</style>
 </head>
 <body>
