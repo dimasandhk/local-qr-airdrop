@@ -3,15 +3,22 @@ package main
 import (
 	"flag"
 	"fmt"
+	"html"
 	"log"
 	"os"
 	"path/filepath"
+	"sync"
 
 	"github.com/atotto/clipboard"
 	"github.com/dimasandhk/local-qr-airdrop/internal/network"
 	"github.com/dimasandhk/local-qr-airdrop/internal/terminal"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+)
+
+var (
+	uploadedFiles   []string
+	uploadedFilesMu sync.Mutex
 )
 
 func main() {
@@ -56,6 +63,7 @@ func main() {
 
 	app := fiber.New(fiber.Config{
 		DisableStartupMessage: true,
+		BodyLimit:             100 * 1024 * 1024,
 	})
 
 	app.Use(logger.New(logger.Config{
@@ -91,15 +99,30 @@ func main() {
 	// Serve either a single file or a whole directory based on user input
 	if receiveMode {
 		app.Get("/", func(c *fiber.Ctx) error {
-			html := `<!DOCTYPE html>
+			uploadedFilesMu.Lock()
+			recentUploadsHTML := ""
+			if len(uploadedFiles) > 0 {
+				recentUploadsHTML += `<div class="card" style="margin-top: 20px; text-align: left;">`
+				recentUploadsHTML += `<h3>🕒 Recent Uploads</h3>`
+				recentUploadsHTML += `<ul style="padding-left: 20px;">`
+				for i := len(uploadedFiles) - 1; i >= 0; i-- {
+					recentUploadsHTML += fmt.Sprintf(`<li>%s</li>`, html.EscapeString(uploadedFiles[i]))
+				}
+				recentUploadsHTML += `</ul>`
+				recentUploadsHTML += `</div>`
+			}
+			uploadedFilesMu.Unlock()
+
+			html := fmt.Sprintf(`<!DOCTYPE html>
 <html>
 <head>
+	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
 		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
-		.btn { background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; width: 100%; cursor: pointer; }
+		.btn { background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; width: 100%%; cursor: pointer; }
 		.btn:hover { background: #0056b3; }
-		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%; box-sizing: border-box; }
+		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%%; box-sizing: border-box; }
 		.card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
 	</style>
 </head>
@@ -112,8 +135,9 @@ func main() {
 			<input type="submit" value="Upload File" class="btn">
 		</form>
 	</div>
+	%s
 </body>
-</html>`
+</html>`, recentUploadsHTML)
 			return c.Type("html").SendString(html)
 		})
 
@@ -129,9 +153,17 @@ func main() {
 				return c.Status(500).SendString("Error saving file")
 			}
 
+			uploadedFilesMu.Lock()
+			uploadedFiles = append(uploadedFiles, filepath.Base(file.Filename))
+			if len(uploadedFiles) > 10 {
+				uploadedFiles = uploadedFiles[len(uploadedFiles)-10:]
+			}
+			uploadedFilesMu.Unlock()
+
 			successHtml := fmt.Sprintf(`<!DOCTYPE html>
 <html>
 <head>
+	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
 		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
@@ -144,7 +176,7 @@ func main() {
 	<p>Successfully uploaded: <strong>%s</strong></p>
 	<a href="/" class="btn">Upload Another File</a>
 </body>
-</html>`, file.Filename)
+</html>`, html.EscapeString(file.Filename))
 			return c.Type("html").SendString(successHtml)
 		})
 	} else if info.IsDir() {

@@ -1,6 +1,7 @@
-## 2025-04-16 - Headless Clipboard Integration Constraint
-**Learning:** CLI clipboard integration on Linux relies on external display server tools (`xclip`, `xsel`, Wayland). In headless environments or typical containerized sandboxes, these tools are often missing or fail to execute.
-**Action:** Always wrap clipboard interactions in CLI tools with silent error handling to ensure they degrade gracefully and don't crash the application in environments without a window manager.
-## 2025-04-20 - Bidirectional File Transfer
-**Learning:** For a local file-sharing utility, the ability to send files is only half the user journey. The "missing link" was bidirectional transfer—allowing users to seamlessly pull files from a device to the host without requiring complex FTP or cloud setups.
-**Action:** When evaluating simple server utilities, always consider if the inverse operation (e.g., upload vs download) can be implemented with minimal overhead to double the utility of the application.
+## 2025-02-21 - Preventing Stored XSS in Inline HTML Generation
+**Learning:** When using raw strings for HTML template generation in Go (like `fmt.Sprintf`), user-controlled data such as filenames can easily introduce Stored Cross-Site Scripting (XSS) if not properly sanitized.
+**Action:** Always use `html.EscapeString()` from the `html` package when rendering user-provided input into HTML strings in Go.
+
+## 2025-02-21 - Managing Memory Leaks in Global State
+**Learning:** In a long-running app, continuously appending to global state variables (like an `uploadedFiles` slice) without a limit will cause a memory leak.
+**Action:** When introducing global state variables for recent items, implement a hard cap (e.g., retaining only the last 10 items) to prevent unbounded memory growth.
