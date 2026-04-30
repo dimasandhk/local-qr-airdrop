@@ -124,9 +124,13 @@ func main() {
 		.btn:hover { background: #0056b3; }
 		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%%; box-sizing: border-box; }
 		.card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+		body.dark { background: #1a1a1a; color: #f0f0f0; }
+		body.dark .card { background: #2a2a2a; border-color: #444; }
+		body.dark input[type=file] { border-color: #555; color: #f0f0f0; }
 	</style>
 </head>
 <body>
+	<button id="theme-toggle" style="position: absolute; top: 10px; right: 10px; cursor: pointer; background: none; border: none; font-size: 24px;">🌙</button>
 	<div class="card">
 		<h2>📥 Send File to PC</h2>
 		<p>Select a file from your device to send.</p>
@@ -136,6 +140,21 @@ func main() {
 		</form>
 	</div>
 	%s
+	<script>
+		const toggleBtn = document.getElementById('theme-toggle');
+		const body = document.body;
+		const currentTheme = localStorage.getItem('theme');
+		if (currentTheme === 'dark') {
+			body.classList.add('dark');
+			toggleBtn.textContent = '☀️';
+		}
+		toggleBtn.addEventListener('click', () => {
+			body.classList.toggle('dark');
+			const isDark = body.classList.contains('dark');
+			localStorage.setItem('theme', isDark ? 'dark' : 'light');
+			toggleBtn.textContent = isDark ? '☀️' : '🌙';
+		});
+	</script>
 </body>
 </html>`, recentUploadsHTML)
 			return c.Type("html").SendString(html)
@@ -169,12 +188,20 @@ func main() {
 		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
 		.btn { background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; text-decoration: none; display: inline-block; }
 		.btn:hover { background: #218838; }
+		body.dark { background: #1a1a1a; color: #f0f0f0; }
+		body.dark .card { background: #2a2a2a; border-color: #444; }
 	</style>
 </head>
 <body>
 	<h2>✅ Success!</h2>
 	<p>Successfully uploaded: <strong>%s</strong></p>
 	<a href="/" class="btn">Upload Another File</a>
+	<script>
+		const currentTheme = localStorage.getItem('theme');
+		if (currentTheme === 'dark') {
+			document.body.classList.add('dark');
+		}
+	</script>
 </body>
 </html>`, html.EscapeString(file.Filename))
 			return c.Type("html").SendString(successHtml)
