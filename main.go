@@ -124,9 +124,16 @@ func main() {
 		.btn:hover { background: #0056b3; }
 		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%%; box-sizing: border-box; }
 		.card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+		body.dark-theme { background-color: #121212; color: #e0e0e0; }
+		body.dark-theme .card { background-color: #1e1e1e; border-color: #333; box-shadow: 0 4px 8px rgba(255,255,255,0.05); }
+		body.dark-theme input[type=file] { background-color: #333; color: #fff; border-color: #444; }
+		.theme-toggle { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer; }
+		body.dark-theme .theme-toggle::before { content: "☀️"; }
+		.theme-toggle::before { content: "🌙"; }
 	</style>
 </head>
 <body>
+	<button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Theme"></button>
 	<div class="card">
 		<h2>📥 Send File to PC</h2>
 		<p>Select a file from your device to send.</p>
@@ -136,6 +143,16 @@ func main() {
 		</form>
 	</div>
 	%s
+	<script>
+		function toggleTheme() {
+			const body = document.body;
+			body.classList.toggle('dark-theme');
+			localStorage.setItem('theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
+		}
+		if (localStorage.getItem('theme') === 'dark') {
+			document.body.classList.add('dark-theme');
+		}
+	</script>
 </body>
 </html>`, recentUploadsHTML)
 			return c.Type("html").SendString(html)
@@ -169,12 +186,29 @@ func main() {
 		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
 		.btn { background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; text-decoration: none; display: inline-block; }
 		.btn:hover { background: #218838; }
+		body.dark-theme { background-color: #121212; color: #e0e0e0; }
+		body.dark-theme .card { background-color: #1e1e1e; border-color: #333; box-shadow: 0 4px 8px rgba(255,255,255,0.05); }
+		body.dark-theme input[type=file] { background-color: #333; color: #fff; border-color: #444; }
+		.theme-toggle { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer; }
+		body.dark-theme .theme-toggle::before { content: "☀️"; }
+		.theme-toggle::before { content: "🌙"; }
 	</style>
 </head>
 <body>
+	<button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Theme"></button>
 	<h2>✅ Success!</h2>
 	<p>Successfully uploaded: <strong>%s</strong></p>
 	<a href="/" class="btn">Upload Another File</a>
+	<script>
+		function toggleTheme() {
+			const body = document.body;
+			body.classList.toggle('dark-theme');
+			localStorage.setItem('theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
+		}
+		if (localStorage.getItem('theme') === 'dark') {
+			document.body.classList.add('dark-theme');
+		}
+	</script>
 </body>
 </html>`, html.EscapeString(file.Filename))
 			return c.Type("html").SendString(successHtml)
