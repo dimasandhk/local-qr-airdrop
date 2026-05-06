@@ -123,10 +123,34 @@ func main() {
 		.btn { background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; width: 100%%; cursor: pointer; }
 		.btn:hover { background: #0056b3; }
 		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%%; box-sizing: border-box; }
-		.card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+		.card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); transition: background 0.3s, border-color 0.3s; }
+		.theme-toggle { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer; }
+		body.dark-mode { background-color: #121212; color: #ffffff; }
+		body.dark-mode .card { background-color: #1e1e1e; border-color: #333; box-shadow: 0 4px 8px rgba(255,255,255,0.05); }
+		body.dark-mode input[type=file] { background-color: #2a2a2a; color: #ffffff; border-color: #444; }
+		body.dark-mode h2, body.dark-mode h3 { color: #ffffff; }
+		body.dark-mode p { color: #cccccc; }
 	</style>
+	<script>
+		function toggleTheme() {
+			document.body.classList.toggle('dark-mode');
+			const isDarkMode = document.body.classList.contains('dark-mode');
+			localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+			document.getElementById('theme-icon').textContent = isDarkMode ? '☀️' : '🌙';
+		}
+		window.onload = function() {
+			const savedTheme = localStorage.getItem('theme');
+			if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+				document.body.classList.add('dark-mode');
+				document.getElementById('theme-icon').textContent = '☀️';
+			} else {
+				document.getElementById('theme-icon').textContent = '🌙';
+			}
+		}
+	</script>
 </head>
 <body>
+	<button class="theme-toggle" onclick="toggleTheme()" id="theme-icon">🌙</button>
 	<div class="card">
 		<h2>📥 Send File to PC</h2>
 		<p>Select a file from your device to send.</p>
@@ -169,9 +193,31 @@ func main() {
 		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
 		.btn { background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; text-decoration: none; display: inline-block; }
 		.btn:hover { background: #218838; }
+		.theme-toggle { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer; }
+		body.dark-mode { background-color: #121212; color: #ffffff; }
+		body.dark-mode h2 { color: #ffffff; }
+		body.dark-mode p { color: #cccccc; }
 	</style>
+	<script>
+		function toggleTheme() {
+			document.body.classList.toggle('dark-mode');
+			const isDarkMode = document.body.classList.contains('dark-mode');
+			localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+			document.getElementById('theme-icon').textContent = isDarkMode ? '☀️' : '🌙';
+		}
+		window.onload = function() {
+			const savedTheme = localStorage.getItem('theme');
+			if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+				document.body.classList.add('dark-mode');
+				document.getElementById('theme-icon').textContent = '☀️';
+			} else {
+				document.getElementById('theme-icon').textContent = '🌙';
+			}
+		}
+	</script>
 </head>
 <body>
+	<button class="theme-toggle" onclick="toggleTheme()" id="theme-icon">🌙</button>
 	<h2>✅ Success!</h2>
 	<p>Successfully uploaded: <strong>%s</strong></p>
 	<a href="/" class="btn">Upload Another File</a>
