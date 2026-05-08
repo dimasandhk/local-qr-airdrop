@@ -114,19 +114,61 @@ func main() {
 			uploadedFilesMu.Unlock()
 
 			html := fmt.Sprintf(`<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script>
+		// Setup theme before body loads to prevent FOUC
+		(function() {
+			const savedTheme = localStorage.getItem('theme');
+			if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+				document.documentElement.setAttribute('data-theme', 'dark');
+			}
+		})();
+	</script>
 	<style>
-		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
-		.btn { background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; width: 100%%; cursor: pointer; }
-		.btn:hover { background: #0056b3; }
-		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%%; box-sizing: border-box; }
-		.card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+		:root {
+			--bg-color: #ffffff;
+			--text-color: #333333;
+			--card-bg: #ffffff;
+			--card-border: #dddddd;
+			--input-border: #cccccc;
+			--input-bg: #ffffff;
+			--btn-bg: #007bff;
+			--btn-hover: #0056b3;
+			--shadow: rgba(0,0,0,0.1);
+		}
+		[data-theme='dark'] {
+			--bg-color: #121212;
+			--text-color: #e0e0e0;
+			--card-bg: #1e1e1e;
+			--card-border: #333333;
+			--input-border: #444444;
+			--input-bg: #2d2d2d;
+			--btn-bg: #3b82f6;
+			--btn-hover: #2563eb;
+			--shadow: rgba(0,0,0,0.5);
+		}
+		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; background-color: var(--bg-color); color: var(--text-color); transition: background-color 0.3s, color 0.3s; }
+		.btn { background: var(--btn-bg); color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; width: 100%%; cursor: pointer; transition: background-color 0.3s; }
+		.btn:hover { background: var(--btn-hover); }
+		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid var(--input-border); background-color: var(--input-bg); color: var(--text-color); border-radius: 5px; width: 100%%; box-sizing: border-box; }
+		.card { border: 1px solid var(--card-border); background-color: var(--card-bg); padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px var(--shadow); transition: background-color 0.3s, border-color 0.3s; }
+		.theme-toggle { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-color); padding: 5px; }
 	</style>
 </head>
 <body>
+	<button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Dark Mode">🌓</button>
+	<script>
+		function toggleTheme() {
+			const html = document.documentElement;
+			const isDark = html.getAttribute('data-theme') === 'dark';
+			const newTheme = isDark ? 'light' : 'dark';
+			html.setAttribute('data-theme', newTheme);
+			localStorage.setItem('theme', newTheme);
+		}
+	</script>
 	<div class="card">
 		<h2>📥 Send File to PC</h2>
 		<p>Select a file from your device to send.</p>
@@ -161,17 +203,49 @@ func main() {
 			uploadedFilesMu.Unlock()
 
 			successHtml := fmt.Sprintf(`<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script>
+		// Setup theme before body loads to prevent FOUC
+		(function() {
+			const savedTheme = localStorage.getItem('theme');
+			if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+				document.documentElement.setAttribute('data-theme', 'dark');
+			}
+		})();
+	</script>
 	<style>
-		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
-		.btn { background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; text-decoration: none; display: inline-block; }
-		.btn:hover { background: #218838; }
+		:root {
+			--bg-color: #ffffff;
+			--text-color: #333333;
+			--btn-bg: #28a745;
+			--btn-hover: #218838;
+		}
+		[data-theme='dark'] {
+			--bg-color: #121212;
+			--text-color: #e0e0e0;
+			--btn-bg: #22c55e;
+			--btn-hover: #16a34a;
+		}
+		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; background-color: var(--bg-color); color: var(--text-color); transition: background-color 0.3s, color 0.3s; }
+		.btn { background: var(--btn-bg); color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; text-decoration: none; display: inline-block; transition: background-color 0.3s; }
+		.btn:hover { background: var(--btn-hover); }
+		.theme-toggle { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-color); padding: 5px; }
 	</style>
 </head>
 <body>
+	<button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Dark Mode">🌓</button>
+	<script>
+		function toggleTheme() {
+			const html = document.documentElement;
+			const isDark = html.getAttribute('data-theme') === 'dark';
+			const newTheme = isDark ? 'light' : 'dark';
+			html.setAttribute('data-theme', newTheme);
+			localStorage.setItem('theme', newTheme);
+		}
+	</script>
 	<h2>✅ Success!</h2>
 	<p>Successfully uploaded: <strong>%s</strong></p>
 	<a href="/" class="btn">Upload Another File</a>
