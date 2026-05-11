@@ -119,14 +119,36 @@ func main() {
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
-		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
+		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; transition: background 0.3s, color 0.3s; }
+		html.dark-mode body { background: #121212; color: #ffffff; }
+		html.dark-mode .card { background: #1e1e1e; border-color: #333; box-shadow: 0 4px 8px rgba(255,255,255,0.05); }
+		html.dark-mode input[type=file] { background: #333; color: #fff; border-color: #555; }
 		.btn { background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; width: 100%%; cursor: pointer; }
 		.btn:hover { background: #0056b3; }
 		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%%; box-sizing: border-box; }
 		.card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+		.theme-toggle { position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; }
 	</style>
+	<script>
+		const savedTheme = localStorage.getItem('theme');
+		const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+		if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+			document.documentElement.classList.add('dark-mode');
+		}
+		function toggleTheme() {
+			document.documentElement.classList.toggle('dark-mode');
+			const isDark = document.documentElement.classList.contains('dark-mode');
+			localStorage.setItem('theme', isDark ? 'dark' : 'light');
+			document.getElementById('theme-icon').innerText = isDark ? '☀️' : '🌙';
+		}
+		window.addEventListener('DOMContentLoaded', () => {
+			const isDark = document.documentElement.classList.contains('dark-mode');
+			document.getElementById('theme-icon').innerText = isDark ? '☀️' : '🌙';
+		});
+	</script>
 </head>
 <body>
+	<button class="theme-toggle" onclick="toggleTheme()" id="theme-icon">🌙</button>
 	<div class="card">
 		<h2>📥 Send File to PC</h2>
 		<p>Select a file from your device to send.</p>
@@ -166,12 +188,34 @@ func main() {
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
-		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
+		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; transition: background 0.3s, color 0.3s; }
+		html.dark-mode body { background: #121212; color: #ffffff; }
+		html.dark-mode .card { background: #1e1e1e; border-color: #333; box-shadow: 0 4px 8px rgba(255,255,255,0.05); }
+		html.dark-mode input[type=file] { background: #333; color: #fff; border-color: #555; }
 		.btn { background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; text-decoration: none; display: inline-block; }
 		.btn:hover { background: #218838; }
+		.theme-toggle { position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; }
 	</style>
+	<script>
+		const savedTheme = localStorage.getItem('theme');
+		const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+		if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+			document.documentElement.classList.add('dark-mode');
+		}
+		function toggleTheme() {
+			document.documentElement.classList.toggle('dark-mode');
+			const isDark = document.documentElement.classList.contains('dark-mode');
+			localStorage.setItem('theme', isDark ? 'dark' : 'light');
+			document.getElementById('theme-icon').innerText = isDark ? '☀️' : '🌙';
+		}
+		window.addEventListener('DOMContentLoaded', () => {
+			const isDark = document.documentElement.classList.contains('dark-mode');
+			document.getElementById('theme-icon').innerText = isDark ? '☀️' : '🌙';
+		});
+	</script>
 </head>
 <body>
+	<button class="theme-toggle" onclick="toggleTheme()" id="theme-icon">🌙</button>
 	<h2>✅ Success!</h2>
 	<p>Successfully uploaded: <strong>%s</strong></p>
 	<a href="/" class="btn">Upload Another File</a>
