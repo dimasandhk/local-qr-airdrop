@@ -119,14 +119,41 @@ func main() {
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
-		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
+		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; transition: background-color 0.3s, color 0.3s; }
+		body.dark-mode { background-color: #1a1a1a; color: #f0f0f0; }
 		.btn { background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; width: 100%%; cursor: pointer; }
 		.btn:hover { background: #0056b3; }
-		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%%; box-sizing: border-box; }
-		.card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%%; box-sizing: border-box; background-color: white; color: black; }
+		.dark-mode input[type=file] { background-color: #333; color: white; border-color: #555; }
+		.card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); background-color: white; }
+		.dark-mode .card { border-color: #444; background-color: #2a2a2a; box-shadow: 0 4px 8px rgba(0,0,0,0.5); }
+		#theme-toggle { position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 24px; cursor: pointer; }
 	</style>
+	<script>
+		function toggleTheme() {
+			document.body.classList.toggle('dark-mode');
+			var isDark = document.body.classList.contains('dark-mode');
+			localStorage.setItem('theme', isDark ? 'dark' : 'light');
+			document.getElementById('theme-toggle').innerText = isDark ? '☀️' : '🌙';
+		}
+
+		// Initialize theme to prevent flash
+		document.addEventListener('DOMContentLoaded', (event) => {
+			var savedTheme = localStorage.getItem('theme');
+			var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+			var isDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
+
+			if (isDark) {
+				document.body.classList.add('dark-mode');
+				document.getElementById('theme-toggle').innerText = '☀️';
+			} else {
+				document.getElementById('theme-toggle').innerText = '🌙';
+			}
+		});
+	</script>
 </head>
 <body>
+	<button id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Dark Mode">🌙</button>
 	<div class="card">
 		<h2>📥 Send File to PC</h2>
 		<p>Select a file from your device to send.</p>
@@ -166,12 +193,37 @@ func main() {
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
-		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
+		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; transition: background-color 0.3s, color 0.3s; }
+		body.dark-mode { background-color: #1a1a1a; color: #f0f0f0; }
 		.btn { background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; text-decoration: none; display: inline-block; }
 		.btn:hover { background: #218838; }
+		#theme-toggle { position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 24px; cursor: pointer; }
 	</style>
+	<script>
+		function toggleTheme() {
+			document.body.classList.toggle('dark-mode');
+			var isDark = document.body.classList.contains('dark-mode');
+			localStorage.setItem('theme', isDark ? 'dark' : 'light');
+			document.getElementById('theme-toggle').innerText = isDark ? '☀️' : '🌙';
+		}
+
+		// Initialize theme to prevent flash
+		document.addEventListener('DOMContentLoaded', (event) => {
+			var savedTheme = localStorage.getItem('theme');
+			var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+			var isDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
+
+			if (isDark) {
+				document.body.classList.add('dark-mode');
+				document.getElementById('theme-toggle').innerText = '☀️';
+			} else {
+				document.getElementById('theme-toggle').innerText = '🌙';
+			}
+		});
+	</script>
 </head>
 <body>
+	<button id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Dark Mode">🌙</button>
 	<h2>✅ Success!</h2>
 	<p>Successfully uploaded: <strong>%s</strong></p>
 	<a href="/" class="btn">Upload Another File</a>
