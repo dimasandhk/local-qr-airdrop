@@ -114,19 +114,47 @@ func main() {
 			uploadedFilesMu.Unlock()
 
 			html := fmt.Sprintf(`<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script>
+		if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+			document.documentElement.classList.add('dark');
+		}
+	</script>
 	<style>
-		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
+		:root {
+			--bg-color: #ffffff;
+			--text-color: #333333;
+			--card-bg: #ffffff;
+			--border-color: #dddddd;
+			--shadow-color: rgba(0,0,0,0.1);
+			--input-border: #cccccc;
+			--input-bg: #ffffff;
+		}
+		html.dark {
+			--bg-color: #121212;
+			--text-color: #e0e0e0;
+			--card-bg: #1e1e1e;
+			--border-color: #333333;
+			--shadow-color: rgba(0,0,0,0.5);
+			--input-border: #444444;
+			--input-bg: #2d2d2d;
+		}
+		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; background-color: var(--bg-color); color: var(--text-color); transition: background-color 0.3s, color 0.3s; }
 		.btn { background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; width: 100%%; cursor: pointer; }
 		.btn:hover { background: #0056b3; }
-		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%%; box-sizing: border-box; }
-		.card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid var(--input-border); border-radius: 5px; width: 100%%; box-sizing: border-box; background-color: var(--input-bg); color: var(--text-color); }
+		.card { border: 1px solid var(--border-color); padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px var(--shadow-color); background-color: var(--card-bg); }
+		#theme-toggle { background: transparent; border: 1px solid var(--border-color); color: var(--text-color); padding: 8px 12px; border-radius: 5px; cursor: pointer; margin-bottom: 20px; float: right; font-size: 14px; }
+		.clearfix::after { content: ""; clear: both; display: table; }
 	</style>
 </head>
 <body>
+	<div class="clearfix">
+		<button id="theme-toggle" onclick="toggleTheme()">🌓 Toggle Theme</button>
+	</div>
 	<div class="card">
 		<h2>📥 Send File to PC</h2>
 		<p>Select a file from your device to send.</p>
@@ -136,6 +164,16 @@ func main() {
 		</form>
 	</div>
 	%s
+	<script>
+		function toggleTheme() {
+			document.documentElement.classList.toggle('dark');
+			if (document.documentElement.classList.contains('dark')) {
+				localStorage.setItem('theme', 'dark');
+			} else {
+				localStorage.setItem('theme', 'light');
+			}
+		}
+	</script>
 </body>
 </html>`, recentUploadsHTML)
 			return c.Type("html").SendString(html)
@@ -161,20 +199,50 @@ func main() {
 			uploadedFilesMu.Unlock()
 
 			successHtml := fmt.Sprintf(`<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script>
+		if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+			document.documentElement.classList.add('dark');
+		}
+	</script>
 	<style>
-		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
+		:root {
+			--bg-color: #ffffff;
+			--text-color: #333333;
+			--border-color: #dddddd;
+		}
+		html.dark {
+			--bg-color: #121212;
+			--text-color: #e0e0e0;
+			--border-color: #333333;
+		}
+		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; background-color: var(--bg-color); color: var(--text-color); transition: background-color 0.3s, color 0.3s; }
 		.btn { background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; text-decoration: none; display: inline-block; }
 		.btn:hover { background: #218838; }
+		#theme-toggle { background: transparent; border: 1px solid var(--border-color); color: var(--text-color); padding: 8px 12px; border-radius: 5px; cursor: pointer; margin-bottom: 20px; float: right; font-size: 14px; }
+		.clearfix::after { content: ""; clear: both; display: table; }
 	</style>
 </head>
 <body>
+	<div class="clearfix">
+		<button id="theme-toggle" onclick="toggleTheme()">🌓 Toggle Theme</button>
+	</div>
 	<h2>✅ Success!</h2>
 	<p>Successfully uploaded: <strong>%s</strong></p>
 	<a href="/" class="btn">Upload Another File</a>
+	<script>
+		function toggleTheme() {
+			document.documentElement.classList.toggle('dark');
+			if (document.documentElement.classList.contains('dark')) {
+				localStorage.setItem('theme', 'dark');
+			} else {
+				localStorage.setItem('theme', 'light');
+			}
+		}
+	</script>
 </body>
 </html>`, html.EscapeString(file.Filename))
 			return c.Type("html").SendString(successHtml)
