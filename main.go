@@ -119,14 +119,46 @@ func main() {
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
-		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
+		:root.dark-mode body { background-color: #121212; color: #e0e0e0; }
+		:root.dark-mode .card { background-color: #1e1e1e; border-color: #333; box-shadow: 0 4px 8px rgba(0,0,0,0.5); }
+		:root.dark-mode input[type=file] { border-color: #555; background-color: #2a2a2a; color: #e0e0e0; }
+
+		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; position: relative; }
 		.btn { background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; width: 100%%; cursor: pointer; }
 		.btn:hover { background: #0056b3; }
 		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%%; box-sizing: border-box; }
 		.card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+		.theme-toggle { position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 24px; cursor: pointer; }
 	</style>
+	<script>
+		function applyTheme(theme) {
+			if (theme === 'dark') {
+				document.documentElement.classList.add('dark-mode');
+			} else {
+				document.documentElement.classList.remove('dark-mode');
+			}
+		}
+		var currentTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+		applyTheme(currentTheme);
+
+		function toggleTheme() {
+			currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+			localStorage.setItem('theme', currentTheme);
+			applyTheme(currentTheme);
+			updateThemeIcon();
+		}
+
+		function updateThemeIcon() {
+			var icon = document.getElementById('theme-icon');
+			if (icon) {
+				icon.innerText = currentTheme === 'dark' ? '☀️' : '🌙';
+			}
+		}
+		window.addEventListener('DOMContentLoaded', updateThemeIcon);
+	</script>
 </head>
 <body>
+	<button class="theme-toggle" onclick="toggleTheme()" id="theme-icon">🌙</button>
 	<div class="card">
 		<h2>📥 Send File to PC</h2>
 		<p>Select a file from your device to send.</p>
@@ -166,12 +198,42 @@ func main() {
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
-		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
+		:root.dark-mode body { background-color: #121212; color: #e0e0e0; }
+
+		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; position: relative; }
 		.btn { background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; text-decoration: none; display: inline-block; }
 		.btn:hover { background: #218838; }
+		.theme-toggle { position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 24px; cursor: pointer; }
 	</style>
+	<script>
+		function applyTheme(theme) {
+			if (theme === 'dark') {
+				document.documentElement.classList.add('dark-mode');
+			} else {
+				document.documentElement.classList.remove('dark-mode');
+			}
+		}
+		var currentTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+		applyTheme(currentTheme);
+
+		function toggleTheme() {
+			currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+			localStorage.setItem('theme', currentTheme);
+			applyTheme(currentTheme);
+			updateThemeIcon();
+		}
+
+		function updateThemeIcon() {
+			var icon = document.getElementById('theme-icon');
+			if (icon) {
+				icon.innerText = currentTheme === 'dark' ? '☀️' : '🌙';
+			}
+		}
+		window.addEventListener('DOMContentLoaded', updateThemeIcon);
+	</script>
 </head>
 <body>
+	<button class="theme-toggle" onclick="toggleTheme()" id="theme-icon">🌙</button>
 	<h2>✅ Success!</h2>
 	<p>Successfully uploaded: <strong>%s</strong></p>
 	<a href="/" class="btn">Upload Another File</a>
