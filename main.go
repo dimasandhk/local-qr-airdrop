@@ -119,14 +119,51 @@ func main() {
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
-		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
-		.btn { background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; width: 100%%; cursor: pointer; }
-		.btn:hover { background: #0056b3; }
-		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%%; box-sizing: border-box; }
-		.card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+		:root {
+			--bg-color: #ffffff;
+			--text-color: #333333;
+			--card-bg: #ffffff;
+			--card-border: #dddddd;
+			--input-border: #cccccc;
+			--btn-bg: #007bff;
+			--btn-hover: #0056b3;
+		}
+		[data-theme="dark"] {
+			--bg-color: #1a1a1a;
+			--text-color: #e0e0e0;
+			--card-bg: #2a2a2a;
+			--card-border: #444444;
+			--input-border: #555555;
+			--btn-bg: #0056b3;
+			--btn-hover: #004494;
+		}
+		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; background-color: var(--bg-color); color: var(--text-color); transition: background-color 0.3s, color 0.3s; }
+		.btn { background: var(--btn-bg); color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; width: 100%%; cursor: pointer; transition: background 0.3s; }
+		.btn:hover { background: var(--btn-hover); }
+		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid var(--input-border); border-radius: 5px; width: 100%%; box-sizing: border-box; background-color: var(--card-bg); color: var(--text-color); }
+		.card { background-color: var(--card-bg); border: 1px solid var(--card-border); padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); transition: background-color 0.3s, border-color 0.3s; }
+		#theme-toggle { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-color); }
 	</style>
+	<script>
+		function initTheme() {
+			const savedTheme = localStorage.getItem('theme');
+			if (savedTheme) {
+				document.documentElement.setAttribute('data-theme', savedTheme);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				document.documentElement.setAttribute('data-theme', 'dark');
+			}
+		}
+		initTheme();
+		function toggleTheme() {
+			const currentTheme = document.documentElement.getAttribute('data-theme');
+			const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+			document.documentElement.setAttribute('data-theme', newTheme);
+			localStorage.setItem('theme', newTheme);
+		}
+	</script>
 </head>
 <body>
+	<button id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">🌗</button>
 	<div class="card">
 		<h2>📥 Send File to PC</h2>
 		<p>Select a file from your device to send.</p>
@@ -166,12 +203,43 @@ func main() {
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
-		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
-		.btn { background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; text-decoration: none; display: inline-block; }
-		.btn:hover { background: #218838; }
+		:root {
+			--bg-color: #ffffff;
+			--text-color: #333333;
+			--btn-bg: #28a745;
+			--btn-hover: #218838;
+		}
+		[data-theme="dark"] {
+			--bg-color: #1a1a1a;
+			--text-color: #e0e0e0;
+			--btn-bg: #218838;
+			--btn-hover: #1e7e34;
+		}
+		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; background-color: var(--bg-color); color: var(--text-color); transition: background-color 0.3s, color 0.3s; }
+		.btn { background: var(--btn-bg); color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; text-decoration: none; display: inline-block; transition: background 0.3s; }
+		.btn:hover { background: var(--btn-hover); }
+		#theme-toggle { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-color); }
 	</style>
+	<script>
+		function initTheme() {
+			const savedTheme = localStorage.getItem('theme');
+			if (savedTheme) {
+				document.documentElement.setAttribute('data-theme', savedTheme);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				document.documentElement.setAttribute('data-theme', 'dark');
+			}
+		}
+		initTheme();
+		function toggleTheme() {
+			const currentTheme = document.documentElement.getAttribute('data-theme');
+			const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+			document.documentElement.setAttribute('data-theme', newTheme);
+			localStorage.setItem('theme', newTheme);
+		}
+	</script>
 </head>
 <body>
+	<button id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">🌗</button>
 	<h2>✅ Success!</h2>
 	<p>Successfully uploaded: <strong>%s</strong></p>
 	<a href="/" class="btn">Upload Another File</a>
