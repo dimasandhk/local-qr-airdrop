@@ -119,14 +119,34 @@ func main() {
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
-		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
-		.btn { background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; width: 100%%; cursor: pointer; }
+		:root { --bg: #ffffff; --text: #000000; --card-bg: #ffffff; --card-border: #ddd; --input-bg: #ffffff; --input-border: #ccc; }
+		html.dark-mode { --bg: #121212; --text: #ffffff; --card-bg: #1e1e1e; --card-border: #333; --input-bg: #222; --input-border: #444; }
+		body { background-color: var(--bg); color: var(--text); font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; transition: background-color 0.3s, color 0.3s; }
+		.btn { background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; width: 100%%; cursor: pointer; transition: background-color 0.3s; }
 		.btn:hover { background: #0056b3; }
-		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%%; box-sizing: border-box; }
-		.card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+		input[type=file] { background-color: var(--input-bg); color: var(--text); border: 1px solid var(--input-border); margin: 20px 0; padding: 10px; border-radius: 5px; width: 100%%; box-sizing: border-box; transition: background-color 0.3s, color 0.3s, border-color 0.3s; }
+		.card { background-color: var(--card-bg); border: 1px solid var(--card-border); padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); transition: background-color 0.3s, border-color 0.3s; }
+		#theme-toggle { background: none; border: none; font-size: 24px; cursor: pointer; position: absolute; top: 15px; right: 15px; }
 	</style>
+	<script>
+		if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+			document.documentElement.classList.add('dark-mode');
+		}
+		function toggleTheme() {
+			document.documentElement.classList.toggle('dark-mode');
+			const isDark = document.documentElement.classList.contains('dark-mode');
+			localStorage.setItem('theme', isDark ? 'dark' : 'light');
+			document.getElementById('theme-icon').innerText = isDark ? '☀️' : '🌙';
+		}
+		document.addEventListener('DOMContentLoaded', () => {
+			if (document.documentElement.classList.contains('dark-mode')) {
+				document.getElementById('theme-icon').innerText = '☀️';
+			}
+		});
+	</script>
 </head>
 <body>
+	<button id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Dark Mode"><span id="theme-icon">🌙</span></button>
 	<div class="card">
 		<h2>📥 Send File to PC</h2>
 		<p>Select a file from your device to send.</p>
@@ -166,12 +186,32 @@ func main() {
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
-		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
-		.btn { background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; text-decoration: none; display: inline-block; }
+		:root { --bg: #ffffff; --text: #000000; }
+		html.dark-mode { --bg: #121212; --text: #ffffff; }
+		body { background-color: var(--bg); color: var(--text); font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; transition: background-color 0.3s, color 0.3s; }
+		.btn { background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; text-decoration: none; display: inline-block; transition: background-color 0.3s; }
 		.btn:hover { background: #218838; }
+		#theme-toggle { background: none; border: none; font-size: 24px; cursor: pointer; position: absolute; top: 15px; right: 15px; }
 	</style>
+	<script>
+		if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+			document.documentElement.classList.add('dark-mode');
+		}
+		function toggleTheme() {
+			document.documentElement.classList.toggle('dark-mode');
+			const isDark = document.documentElement.classList.contains('dark-mode');
+			localStorage.setItem('theme', isDark ? 'dark' : 'light');
+			document.getElementById('theme-icon').innerText = isDark ? '☀️' : '🌙';
+		}
+		document.addEventListener('DOMContentLoaded', () => {
+			if (document.documentElement.classList.contains('dark-mode')) {
+				document.getElementById('theme-icon').innerText = '☀️';
+			}
+		});
+	</script>
 </head>
 <body>
+	<button id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Dark Mode"><span id="theme-icon">🌙</span></button>
 	<h2>✅ Success!</h2>
 	<p>Successfully uploaded: <strong>%s</strong></p>
 	<a href="/" class="btn">Upload Another File</a>
