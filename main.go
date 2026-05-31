@@ -118,15 +118,40 @@ func main() {
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script>
+		if (localStorage.getItem('theme') === 'dark') {
+			document.documentElement.classList.add('dark-mode');
+		}
+		function toggleTheme() {
+			const isDark = document.documentElement.classList.toggle('dark-mode');
+			localStorage.setItem('theme', isDark ? 'dark' : 'light');
+			document.getElementById('theme-icon').innerText = isDark ? '☀️' : '🌙';
+		}
+		window.addEventListener('DOMContentLoaded', () => {
+			const isDark = document.documentElement.classList.contains('dark-mode');
+			const icon = document.getElementById('theme-icon');
+			if (icon) icon.innerText = isDark ? '☀️' : '🌙';
+		});
+	</script>
+
 	<style>
 		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
 		.btn { background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; width: 100%%; cursor: pointer; }
 		.btn:hover { background: #0056b3; }
 		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%%; box-sizing: border-box; }
 		.card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+
+		body { transition: background 0.3s, color 0.3s; }
+		.card { transition: background 0.3s, border-color 0.3s; }
+		html.dark-mode body { background: #1e1e1e; color: #f4f4f4; }
+		html.dark-mode .card { background: #2d2d2d; border-color: #444; box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
+		html.dark-mode input[type=file] { border-color: #555; background: #333; color: #f4f4f4; }
+		.theme-toggle { position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; }
 	</style>
 </head>
 <body>
+	<button class="theme-toggle" onclick="toggleTheme()" id="theme-icon">🌙</button>
+
 	<div class="card">
 		<h2>📥 Send File to PC</h2>
 		<p>Select a file from your device to send.</p>
@@ -165,13 +190,38 @@ func main() {
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script>
+		if (localStorage.getItem('theme') === 'dark') {
+			document.documentElement.classList.add('dark-mode');
+		}
+		function toggleTheme() {
+			const isDark = document.documentElement.classList.toggle('dark-mode');
+			localStorage.setItem('theme', isDark ? 'dark' : 'light');
+			document.getElementById('theme-icon').innerText = isDark ? '☀️' : '🌙';
+		}
+		window.addEventListener('DOMContentLoaded', () => {
+			const isDark = document.documentElement.classList.contains('dark-mode');
+			const icon = document.getElementById('theme-icon');
+			if (icon) icon.innerText = isDark ? '☀️' : '🌙';
+		});
+	</script>
+
 	<style>
 		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
 		.btn { background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; text-decoration: none; display: inline-block; }
 		.btn:hover { background: #218838; }
+
+		body { transition: background 0.3s, color 0.3s; }
+		.card { transition: background 0.3s, border-color 0.3s; }
+		html.dark-mode body { background: #1e1e1e; color: #f4f4f4; }
+		html.dark-mode .card { background: #2d2d2d; border-color: #444; box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
+		html.dark-mode input[type=file] { border-color: #555; background: #333; color: #f4f4f4; }
+		.theme-toggle { position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; }
 	</style>
 </head>
 <body>
+	<button class="theme-toggle" onclick="toggleTheme()" id="theme-icon">🌙</button>
+
 	<h2>✅ Success!</h2>
 	<p>Successfully uploaded: <strong>%s</strong></p>
 	<a href="/" class="btn">Upload Another File</a>
