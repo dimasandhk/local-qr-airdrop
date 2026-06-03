@@ -5,3 +5,6 @@
 ## 2025-02-21 - Managing Memory Leaks in Global State
 **Learning:** In a long-running app, continuously appending to global state variables (like an `uploadedFiles` slice) without a limit will cause a memory leak.
 **Action:** When introducing global state variables for recent items, implement a hard cap (e.g., retaining only the last 10 items) to prevent unbounded memory growth.
+## 2025-02-21 - Avoiding FOUC with Theme Toggles
+**Learning:** When implementing theme toggles (like Dark Mode) using inline HTML templates without a templating engine, placing the initialization `<script>` inside the `<head>` rather than at the end of the `<body>` is crucial to prevent a Flash of Unstyled Content (FOUC).
+**Action:** Always initialize theme states by reading `localStorage` or `matchMedia` inside the `<head>` before the body renders.
