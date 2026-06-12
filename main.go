@@ -118,15 +118,30 @@ func main() {
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script>
+		(function() {
+			var theme = localStorage.getItem('theme');
+			if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+				document.documentElement.classList.add('dark-mode');
+			}
+		})();
+	</script>
 	<style>
-		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
-		.btn { background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; width: 100%%; cursor: pointer; }
-		.btn:hover { background: #0056b3; }
-		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%%; box-sizing: border-box; }
-		.card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+		:root { --bg: #fff; --text: #333; --card-bg: #fff; --border: #ddd; --input-bg: #fff; --btn-bg: #007bff; }
+		html.dark-mode { --bg: #121212; --text: #f1f1f1; --card-bg: #1e1e1e; --border: #333; --input-bg: #2d2d2d; --btn-bg: #0d6efd; }
+		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; background: var(--bg); color: var(--text); }
+		.btn { background: var(--btn-bg); color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; width: 100%%; cursor: pointer; }
+		.btn:hover { opacity: 0.9; }
+		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text); border-radius: 5px; width: 100%%; box-sizing: border-box; }
+		.card { border: 1px solid var(--border); background: var(--card-bg); padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+		.header { display: flex; justify-content: flex-end; }
+		.theme-toggle { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text); }
 	</style>
 </head>
 <body>
+	<div class="header">
+		<button class="theme-toggle" id="theme-toggle" title="Toggle Theme">🌓</button>
+	</div>
 	<div class="card">
 		<h2>📥 Send File to PC</h2>
 		<p>Select a file from your device to send.</p>
@@ -136,6 +151,13 @@ func main() {
 		</form>
 	</div>
 	%s
+	<script>
+		document.getElementById('theme-toggle').addEventListener('click', function() {
+			document.documentElement.classList.toggle('dark-mode');
+			var theme = document.documentElement.classList.contains('dark-mode') ? 'dark' : 'light';
+			localStorage.setItem('theme', theme);
+		});
+	</script>
 </body>
 </html>`, recentUploadsHTML)
 			return c.Type("html").SendString(html)
@@ -165,16 +187,38 @@ func main() {
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script>
+		(function() {
+			var theme = localStorage.getItem('theme');
+			if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+				document.documentElement.classList.add('dark-mode');
+			}
+		})();
+	</script>
 	<style>
-		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
-		.btn { background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; text-decoration: none; display: inline-block; }
-		.btn:hover { background: #218838; }
+		:root { --bg: #fff; --text: #333; --btn-bg: #28a745; }
+		html.dark-mode { --bg: #121212; --text: #f1f1f1; --btn-bg: #218838; }
+		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; background: var(--bg); color: var(--text); }
+		.btn { background: var(--btn-bg); color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; text-decoration: none; display: inline-block; cursor: pointer; }
+		.btn:hover { opacity: 0.9; }
+		.header { display: flex; justify-content: flex-end; }
+		.theme-toggle { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text); }
 	</style>
 </head>
 <body>
+	<div class="header">
+		<button class="theme-toggle" id="theme-toggle" title="Toggle Theme">🌓</button>
+	</div>
 	<h2>✅ Success!</h2>
 	<p>Successfully uploaded: <strong>%s</strong></p>
 	<a href="/" class="btn">Upload Another File</a>
+	<script>
+		document.getElementById('theme-toggle').addEventListener('click', function() {
+			document.documentElement.classList.toggle('dark-mode');
+			var theme = document.documentElement.classList.contains('dark-mode') ? 'dark' : 'light';
+			localStorage.setItem('theme', theme);
+		});
+	</script>
 </body>
 </html>`, html.EscapeString(file.Filename))
 			return c.Type("html").SendString(successHtml)
