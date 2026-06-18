@@ -5,3 +5,7 @@
 ## 2025-02-21 - Managing Memory Leaks in Global State
 **Learning:** In a long-running app, continuously appending to global state variables (like an `uploadedFiles` slice) without a limit will cause a memory leak.
 **Action:** When introducing global state variables for recent items, implement a hard cap (e.g., retaining only the last 10 items) to prevent unbounded memory growth.
+
+## 2025-02-23 - Dark Mode Implementation in local-qr-airdrop
+**Learning:** When injecting global UI features like Dark Mode into this CLI's web views using inline `fmt.Sprintf` templates, CSS and JS snippets must be duplicated across endpoints due to the lack of a shared templating engine.
+**Action:** Always replicate JS and CSS changes across both the root ("/") and upload ("/upload") endpoint templates to ensure UI consistency.
