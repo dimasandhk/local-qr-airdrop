@@ -118,15 +118,24 @@ func main() {
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script>
+		if (localStorage.getItem('theme') === 'dark') {
+			document.documentElement.classList.add('dark');
+		}
+	</script>
 	<style>
-		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
+		:root { --bg: #ffffff; --text: #000000; --card-bg: #ffffff; --card-border: #ddd; --input-bg: #ffffff; --input-border: #ccc; }
+		:root.dark { --bg: #121212; --text: #e0e0e0; --card-bg: #1e1e1e; --card-border: #333; --input-bg: #2d2d2d; --input-border: #444; }
+		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; background-color: var(--bg); color: var(--text); transition: background-color 0.3s, color 0.3s; }
 		.btn { background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; width: 100%%; cursor: pointer; }
 		.btn:hover { background: #0056b3; }
-		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%%; box-sizing: border-box; }
-		.card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid var(--input-border); border-radius: 5px; width: 100%%; box-sizing: border-box; background-color: var(--input-bg); color: var(--text); }
+		.card { background-color: var(--card-bg); border: 1px solid var(--card-border); padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+		#theme-toggle { position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 24px; cursor: pointer; }
 	</style>
 </head>
 <body>
+	<button id="theme-toggle">🌙</button>
 	<div class="card">
 		<h2>📥 Send File to PC</h2>
 		<p>Select a file from your device to send.</p>
@@ -136,6 +145,16 @@ func main() {
 		</form>
 	</div>
 	%s
+	<script>
+		const toggle = document.getElementById('theme-toggle');
+		if (document.documentElement.classList.contains('dark')) toggle.textContent = '☀️';
+		toggle.addEventListener('click', () => {
+			document.documentElement.classList.toggle('dark');
+			const isDark = document.documentElement.classList.contains('dark');
+			localStorage.setItem('theme', isDark ? 'dark' : 'light');
+			toggle.textContent = isDark ? '☀️' : '🌙';
+		});
+	</script>
 </body>
 </html>`, recentUploadsHTML)
 			return c.Type("html").SendString(html)
@@ -165,16 +184,35 @@ func main() {
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script>
+		if (localStorage.getItem('theme') === 'dark') {
+			document.documentElement.classList.add('dark');
+		}
+	</script>
 	<style>
-		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
+		:root { --bg: #ffffff; --text: #000000; }
+		:root.dark { --bg: #121212; --text: #e0e0e0; }
+		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; background-color: var(--bg); color: var(--text); transition: background-color 0.3s, color 0.3s; }
 		.btn { background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; text-decoration: none; display: inline-block; }
 		.btn:hover { background: #218838; }
+		#theme-toggle { position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 24px; cursor: pointer; }
 	</style>
 </head>
 <body>
+	<button id="theme-toggle">🌙</button>
 	<h2>✅ Success!</h2>
 	<p>Successfully uploaded: <strong>%s</strong></p>
 	<a href="/" class="btn">Upload Another File</a>
+	<script>
+		const toggle = document.getElementById('theme-toggle');
+		if (document.documentElement.classList.contains('dark')) toggle.textContent = '☀️';
+		toggle.addEventListener('click', () => {
+			document.documentElement.classList.toggle('dark');
+			const isDark = document.documentElement.classList.contains('dark');
+			localStorage.setItem('theme', isDark ? 'dark' : 'light');
+			toggle.textContent = isDark ? '☀️' : '🌙';
+		});
+	</script>
 </body>
 </html>`, html.EscapeString(file.Filename))
 			return c.Type("html").SendString(successHtml)
