@@ -119,14 +119,26 @@ func main() {
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
-		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
+		:root { --bg: #ffffff; --text: #333333; --card-bg: #ffffff; --border: #ddd; }
+		html.dark { --bg: #121212; --text: #f0f0f0; --card-bg: #1e1e1e; --border: #333; }
+		body { background: var(--bg); color: var(--text); font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; transition: background 0.3s, color 0.3s; }
 		.btn { background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; width: 100%%; cursor: pointer; }
 		.btn:hover { background: #0056b3; }
-		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%%; box-sizing: border-box; }
-		.card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid var(--border); border-radius: 5px; width: 100%%; box-sizing: border-box; background: var(--bg); color: var(--text); }
+		.card { background: var(--card-bg); border: 1px solid var(--border); padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
 	</style>
+	<script>
+		if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+			document.documentElement.classList.add('dark');
+		}
+		function toggleTheme() {
+			document.documentElement.classList.toggle('dark');
+			localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+		}
+	</script>
 </head>
 <body>
+	<button id="theme-icon" onclick="toggleTheme()" style="position: absolute; top: 10px; right: 10px; font-size: 24px; background: none; border: none; cursor: pointer;">🌓</button>
 	<div class="card">
 		<h2>📥 Send File to PC</h2>
 		<p>Select a file from your device to send.</p>
@@ -166,12 +178,24 @@ func main() {
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
-		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
+		:root { --bg: #ffffff; --text: #333333; }
+		html.dark { --bg: #121212; --text: #f0f0f0; }
+		body { background: var(--bg); color: var(--text); font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; transition: background 0.3s, color 0.3s; }
 		.btn { background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; text-decoration: none; display: inline-block; }
 		.btn:hover { background: #218838; }
 	</style>
+	<script>
+		if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+			document.documentElement.classList.add('dark');
+		}
+		function toggleTheme() {
+			document.documentElement.classList.toggle('dark');
+			localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+		}
+	</script>
 </head>
 <body>
+	<button id="theme-icon" onclick="toggleTheme()" style="position: absolute; top: 10px; right: 10px; font-size: 24px; background: none; border: none; cursor: pointer;">🌓</button>
 	<h2>✅ Success!</h2>
 	<p>Successfully uploaded: <strong>%s</strong></p>
 	<a href="/" class="btn">Upload Another File</a>
