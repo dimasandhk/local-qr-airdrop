@@ -119,14 +119,37 @@ func main() {
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
-		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
+		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; transition: background 0.3s, color 0.3s; }
 		.btn { background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; width: 100%%; cursor: pointer; }
 		.btn:hover { background: #0056b3; }
 		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%%; box-sizing: border-box; }
-		.card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+		.card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); background: #fff; transition: background 0.3s, border-color 0.3s; }
+		html.dark-mode body { background: #1e1e1e; color: #f5f5f5; }
+		html.dark-mode .card { background: #2d2d2d; border-color: #444; }
+		html.dark-mode input[type=file] { border-color: #555; color: #f5f5f5; }
+		#theme-toggle { width: auto; position: absolute; top: 10px; right: 10px; padding: 8px 12px; margin-top: 0; background: transparent; border: 1px solid #ccc; color: inherit; font-size: 16px; cursor: pointer; border-radius: 5px; }
+		#theme-toggle:hover { background: #e0e0e0; }
+		html.dark-mode #theme-toggle { border-color: #666; }
+		html.dark-mode #theme-toggle:hover { background: #333; }
 	</style>
+	<script>
+		if (localStorage.getItem('theme') === 'dark') {
+			document.documentElement.classList.add('dark-mode');
+		}
+	</script>
 </head>
 <body>
+	<button id="theme-toggle"></button>
+	<script>
+		const toggleBtn = document.getElementById('theme-toggle');
+		toggleBtn.textContent = document.documentElement.classList.contains('dark-mode') ? '☀️' : '🌙';
+		toggleBtn.addEventListener('click', () => {
+			document.documentElement.classList.toggle('dark-mode');
+			const isDark = document.documentElement.classList.contains('dark-mode');
+			localStorage.setItem('theme', isDark ? 'dark' : 'light');
+			toggleBtn.textContent = isDark ? '☀️' : '🌙';
+		});
+	</script>
 	<div class="card">
 		<h2>📥 Send File to PC</h2>
 		<p>Select a file from your device to send.</p>
@@ -166,12 +189,33 @@ func main() {
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
-		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
+		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; transition: background 0.3s, color 0.3s; }
 		.btn { background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; text-decoration: none; display: inline-block; }
 		.btn:hover { background: #218838; }
+		html.dark-mode body { background: #1e1e1e; color: #f5f5f5; }
+		#theme-toggle { width: auto; position: absolute; top: 10px; right: 10px; padding: 8px 12px; margin-top: 0; background: transparent; border: 1px solid #ccc; color: inherit; font-size: 16px; cursor: pointer; border-radius: 5px; }
+		#theme-toggle:hover { background: #e0e0e0; }
+		html.dark-mode #theme-toggle { border-color: #666; }
+		html.dark-mode #theme-toggle:hover { background: #333; }
 	</style>
+	<script>
+		if (localStorage.getItem('theme') === 'dark') {
+			document.documentElement.classList.add('dark-mode');
+		}
+	</script>
 </head>
 <body>
+	<button id="theme-toggle"></button>
+	<script>
+		const toggleBtn = document.getElementById('theme-toggle');
+		toggleBtn.textContent = document.documentElement.classList.contains('dark-mode') ? '☀️' : '🌙';
+		toggleBtn.addEventListener('click', () => {
+			document.documentElement.classList.toggle('dark-mode');
+			const isDark = document.documentElement.classList.contains('dark-mode');
+			localStorage.setItem('theme', isDark ? 'dark' : 'light');
+			toggleBtn.textContent = isDark ? '☀️' : '🌙';
+		});
+	</script>
 	<h2>✅ Success!</h2>
 	<p>Successfully uploaded: <strong>%s</strong></p>
 	<a href="/" class="btn">Upload Another File</a>
