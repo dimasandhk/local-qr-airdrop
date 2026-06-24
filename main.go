@@ -118,15 +118,52 @@ func main() {
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script>
+		if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+			document.documentElement.classList.add('dark');
+		}
+		function toggleTheme() {
+			if (document.documentElement.classList.contains('dark')) {
+				document.documentElement.classList.remove('dark');
+				localStorage.setItem('theme', 'light');
+				document.getElementById('theme-toggle').innerText = '🌙 Dark Mode';
+			} else {
+				document.documentElement.classList.add('dark');
+				localStorage.setItem('theme', 'dark');
+				document.getElementById('theme-toggle').innerText = '☀️ Light Mode';
+			}
+		}
+		document.addEventListener('DOMContentLoaded', () => {
+			if (document.documentElement.classList.contains('dark')) {
+				document.getElementById('theme-toggle').innerText = '☀️ Light Mode';
+			}
+		});
+	</script>
 	<style>
-		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
+		:root {
+			--bg-color: #ffffff;
+			--text-color: #333333;
+			--card-bg: #ffffff;
+			--card-border: #ddd;
+			--input-border: #ccc;
+		}
+		:root.dark {
+			--bg-color: #1a1a1a;
+			--text-color: #f0f0f0;
+			--card-bg: #2d2d2d;
+			--card-border: #444;
+			--input-border: #555;
+		}
+		body { background-color: var(--bg-color); color: var(--text-color); font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; transition: background-color 0.3s, color 0.3s; }
 		.btn { background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; width: 100%%; cursor: pointer; }
 		.btn:hover { background: #0056b3; }
-		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%%; box-sizing: border-box; }
-		.card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+		input[type=file] { color: var(--text-color); margin: 20px 0; padding: 10px; border: 1px solid var(--input-border); border-radius: 5px; width: 100%%; box-sizing: border-box; background-color: var(--bg-color); }
+		.card { background-color: var(--card-bg); border: 1px solid var(--card-border); padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); transition: background-color 0.3s, border-color 0.3s; }
+		.theme-btn { position: fixed; top: 10px; right: 10px; background: var(--card-bg); color: var(--text-color); border: 1px solid var(--card-border); padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 14px; }
 	</style>
 </head>
 <body>
+	<button id="theme-toggle" class="theme-btn" onclick="toggleTheme()">🌙 Dark Mode</button>
 	<div class="card">
 		<h2>📥 Send File to PC</h2>
 		<p>Select a file from your device to send.</p>
