@@ -5,3 +5,7 @@
 ## 2025-02-21 - Managing Memory Leaks in Global State
 **Learning:** In a long-running app, continuously appending to global state variables (like an `uploadedFiles` slice) without a limit will cause a memory leak.
 **Action:** When introducing global state variables for recent items, implement a hard cap (e.g., retaining only the last 10 items) to prevent unbounded memory growth.
+
+## 2025-02-21 - Avoiding Port Collisions in Playwright Testing
+**Learning:** When writing Playwright verification scripts, if the local server is already started in the background by the bash environment (e.g., `go run main.go -r . &`), redundantly starting it inside the Python script via `subprocess.Popen` will cause port binding errors.
+**Action:** Always verify how the server is being launched in the test plan. If bash handles it, the Python script should only handle the browser actions and rely on a `time.sleep()` before navigating to the URL.
