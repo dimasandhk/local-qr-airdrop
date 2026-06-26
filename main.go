@@ -118,15 +118,49 @@ func main() {
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script>
+		const theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+		document.documentElement.setAttribute('data-theme', theme);
+		function toggleTheme() {
+			const currentTheme = document.documentElement.getAttribute('data-theme');
+			const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+			document.documentElement.setAttribute('data-theme', newTheme);
+			localStorage.setItem('theme', newTheme);
+			const btn = document.getElementById('theme-toggle');
+			if(btn) btn.innerText = newTheme === 'dark' ? '☀️' : '🌙';
+		}
+	</script>
 	<style>
-		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
+		:root {
+			--bg-color: #ffffff;
+			--text-color: #333333;
+			--card-bg: #ffffff;
+			--card-border: #ddd;
+			--input-border: #ccc;
+		}
+		[data-theme="dark"] {
+			--bg-color: #121212;
+			--text-color: #e0e0e0;
+			--card-bg: #1e1e1e;
+			--card-border: #333333;
+			--input-border: #444;
+		}
+		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; background-color: var(--bg-color); color: var(--text-color); transition: background-color 0.3s, color 0.3s; }
 		.btn { background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; width: 100%%; cursor: pointer; }
 		.btn:hover { background: #0056b3; }
-		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%%; box-sizing: border-box; }
-		.card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid var(--input-border); border-radius: 5px; width: 100%%; box-sizing: border-box; background-color: var(--card-bg); color: var(--text-color); }
+		.card { background-color: var(--card-bg); border: 1px solid var(--card-border); padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); transition: background-color 0.3s, border-color 0.3s; }
+		.theme-toggle-container { text-align: right; margin-bottom: 10px; }
+		#theme-toggle { background: none; border: none; font-size: 24px; cursor: pointer; }
 	</style>
 </head>
 <body>
+	<div class="theme-toggle-container">
+		<button id="theme-toggle" onclick="toggleTheme()" title="Toggle Theme"></button>
+	</div>
+	<script>
+		document.getElementById('theme-toggle').innerText = document.documentElement.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙';
+	</script>
 	<div class="card">
 		<h2>📥 Send File to PC</h2>
 		<p>Select a file from your device to send.</p>
@@ -165,13 +199,41 @@ func main() {
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script>
+		const theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+		document.documentElement.setAttribute('data-theme', theme);
+		function toggleTheme() {
+			const currentTheme = document.documentElement.getAttribute('data-theme');
+			const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+			document.documentElement.setAttribute('data-theme', newTheme);
+			localStorage.setItem('theme', newTheme);
+			const btn = document.getElementById('theme-toggle');
+			if(btn) btn.innerText = newTheme === 'dark' ? '☀️' : '🌙';
+		}
+	</script>
 	<style>
-		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
+		:root {
+			--bg-color: #ffffff;
+			--text-color: #333333;
+		}
+		[data-theme="dark"] {
+			--bg-color: #121212;
+			--text-color: #e0e0e0;
+		}
+		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; background-color: var(--bg-color); color: var(--text-color); transition: background-color 0.3s, color 0.3s; }
 		.btn { background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; text-decoration: none; display: inline-block; }
 		.btn:hover { background: #218838; }
+		.theme-toggle-container { text-align: right; margin-bottom: 10px; }
+		#theme-toggle { background: none; border: none; font-size: 24px; cursor: pointer; }
 	</style>
 </head>
 <body>
+	<div class="theme-toggle-container">
+		<button id="theme-toggle" onclick="toggleTheme()" title="Toggle Theme"></button>
+	</div>
+	<script>
+		document.getElementById('theme-toggle').innerText = document.documentElement.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙';
+	</script>
 	<h2>✅ Success!</h2>
 	<p>Successfully uploaded: <strong>%s</strong></p>
 	<a href="/" class="btn">Upload Another File</a>
