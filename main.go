@@ -17,8 +17,10 @@ import (
 )
 
 var (
-	uploadedFiles   []string
-	uploadedFilesMu sync.Mutex
+	uploadedFiles    []string
+	uploadedFilesMu  sync.Mutex
+	totalUploadCount int
+	totalUploadSize  int64
 )
 
 func main() {
@@ -111,7 +113,29 @@ func main() {
 				recentUploadsHTML += `</ul>`
 				recentUploadsHTML += `</div>`
 			}
+			count := totalUploadCount
+			size := totalUploadSize
 			uploadedFilesMu.Unlock()
+
+			statsHTML := ""
+			if count > 0 {
+				sizeStr := ""
+				if size > 1024*1024 {
+					sizeStr = fmt.Sprintf("%.2f MB", float64(size)/(1024*1024))
+				} else if size > 1024 {
+					sizeStr = fmt.Sprintf("%.2f KB", float64(size)/1024)
+				} else {
+					sizeStr = fmt.Sprintf("%d Bytes", size)
+				}
+
+				statsHTML = fmt.Sprintf(`<div class="card" style="margin-top: 20px; text-align: left;">
+					<h3>📊 Session Stats</h3>
+					<ul style="padding-left: 20px; line-height: 1.6;">
+						<li>Total files received: <strong>%d</strong></li>
+						<li>Total data received: <strong>%s</strong></li>
+					</ul>
+				</div>`, count, sizeStr)
+			}
 
 			html := fmt.Sprintf(`<!DOCTYPE html>
 <html>
@@ -136,8 +160,9 @@ func main() {
 		</form>
 	</div>
 	%s
+	%s
 </body>
-</html>`, recentUploadsHTML)
+</html>`, statsHTML, recentUploadsHTML)
 			return c.Type("html").SendString(html)
 		})
 
@@ -158,6 +183,8 @@ func main() {
 			if len(uploadedFiles) > 10 {
 				uploadedFiles = uploadedFiles[len(uploadedFiles)-10:]
 			}
+			totalUploadCount++
+			totalUploadSize += file.Size
 			uploadedFilesMu.Unlock()
 
 			successHtml := fmt.Sprintf(`<!DOCTYPE html>
