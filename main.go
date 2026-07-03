@@ -119,6 +119,21 @@ func main() {
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
+		:root.dark body { background-color: #121212; color: #ffffff; }
+		:root.dark .card { border-color: #333; background: #1e1e1e; box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
+		:root.dark input[type=file] { border-color: #444; background: #222; color: #fff; }
+		.theme-toggle { position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 24px; cursor: pointer; }
+	</style>
+	<script>
+		function toggleTheme() {
+			document.documentElement.classList.toggle('dark');
+			localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+		}
+		if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+			document.documentElement.classList.add('dark');
+		}
+	</script>
+	<style>
 		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
 		.btn { background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; width: 100%%; cursor: pointer; }
 		.btn:hover { background: #0056b3; }
@@ -127,6 +142,7 @@ func main() {
 	</style>
 </head>
 <body>
+	<button class="theme-toggle" onclick="toggleTheme()" id="theme-icon">🌓</button>
 	<div class="card">
 		<h2>📥 Send File to PC</h2>
 		<p>Select a file from your device to send.</p>
@@ -166,12 +182,28 @@ func main() {
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
+		:root.dark body { background-color: #121212; color: #ffffff; }
+		:root.dark .card { border-color: #333; background: #1e1e1e; box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
+		:root.dark input[type=file] { border-color: #444; background: #222; color: #fff; }
+		.theme-toggle { position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 24px; cursor: pointer; }
+	</style>
+	<script>
+		function toggleTheme() {
+			document.documentElement.classList.toggle('dark');
+			localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+		}
+		if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+			document.documentElement.classList.add('dark');
+		}
+	</script>
+	<style>
 		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
 		.btn { background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; text-decoration: none; display: inline-block; }
 		.btn:hover { background: #218838; }
 	</style>
 </head>
 <body>
+	<button class="theme-toggle" onclick="toggleTheme()" id="theme-icon">🌓</button>
 	<h2>✅ Success!</h2>
 	<p>Successfully uploaded: <strong>%s</strong></p>
 	<a href="/" class="btn">Upload Another File</a>
