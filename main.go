@@ -119,14 +119,32 @@ func main() {
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
-		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
+		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; transition: background-color 0.3s, color 0.3s; }
 		.btn { background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; width: 100%%; cursor: pointer; }
 		.btn:hover { background: #0056b3; }
 		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%%; box-sizing: border-box; }
-		.card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+		.card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); background-color: #fff; transition: background-color 0.3s, border-color 0.3s; }
+
+		/* Dark mode styles */
+		html.dark body { background-color: #121212; color: #e0e0e0; }
+		html.dark .card { background-color: #1e1e1e; border-color: #333; }
+		html.dark input[type=file] { background-color: #333; color: #e0e0e0; border-color: #444; }
+		html.dark a { color: #66b3ff; }
+		html.dark h3 { color: #fff; }
+
+		.theme-toggle-container { position: absolute; top: 20px; right: 20px; }
+		#theme-icon { background: none; border: none; font-size: 24px; cursor: pointer; padding: 0; }
 	</style>
+	<script>
+		if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+			document.documentElement.classList.add('dark');
+		}
+	</script>
 </head>
 <body>
+	<div class="theme-toggle-container">
+		<button id="theme-icon" aria-label="Toggle Dark Mode">🌓</button>
+	</div>
 	<div class="card">
 		<h2>📥 Send File to PC</h2>
 		<p>Select a file from your device to send.</p>
@@ -136,6 +154,12 @@ func main() {
 		</form>
 	</div>
 	%s
+	<script>
+		document.getElementById('theme-icon').addEventListener('click', function() {
+			document.documentElement.classList.toggle('dark');
+			localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+		});
+	</script>
 </body>
 </html>`, recentUploadsHTML)
 			return c.Type("html").SendString(html)
@@ -166,15 +190,35 @@ func main() {
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
-		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
+		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; transition: background-color 0.3s, color 0.3s; }
 		.btn { background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; text-decoration: none; display: inline-block; }
 		.btn:hover { background: #218838; }
+
+		/* Dark mode styles */
+		html.dark body { background-color: #121212; color: #e0e0e0; }
+
+		.theme-toggle-container { position: absolute; top: 20px; right: 20px; }
+		#theme-icon { background: none; border: none; font-size: 24px; cursor: pointer; padding: 0; }
 	</style>
+	<script>
+		if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+			document.documentElement.classList.add('dark');
+		}
+	</script>
 </head>
 <body>
+	<div class="theme-toggle-container">
+		<button id="theme-icon" aria-label="Toggle Dark Mode">🌓</button>
+	</div>
 	<h2>✅ Success!</h2>
 	<p>Successfully uploaded: <strong>%s</strong></p>
 	<a href="/" class="btn">Upload Another File</a>
+	<script>
+		document.getElementById('theme-icon').addEventListener('click', function() {
+			document.documentElement.classList.toggle('dark');
+			localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+		});
+	</script>
 </body>
 </html>`, html.EscapeString(file.Filename))
 			return c.Type("html").SendString(successHtml)
