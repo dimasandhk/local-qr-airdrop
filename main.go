@@ -119,14 +119,34 @@ func main() {
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
-		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
+		:root { --bg-color: #ffffff; --text-color: #000000; --card-bg: #ffffff; --card-border: #ddd; --input-border: #ccc; }
+		:root[data-theme="dark"] { --bg-color: #1a1a1a; --text-color: #f0f0f0; --card-bg: #2a2a2a; --card-border: #444; --input-border: #555; }
+		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; background-color: var(--bg-color); color: var(--text-color); transition: background-color 0.3s, color 0.3s; }
 		.btn { background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; width: 100%%; cursor: pointer; }
 		.btn:hover { background: #0056b3; }
-		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%%; box-sizing: border-box; }
-		.card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+		input[type=file] { margin: 20px 0; padding: 10px; border: 1px solid var(--input-border); border-radius: 5px; width: 100%%; box-sizing: border-box; color: var(--text-color); }
+		.card { background-color: var(--card-bg); border: 1px solid var(--card-border); padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); transition: background-color 0.3s, border-color 0.3s; }
+		.theme-toggle { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer; }
 	</style>
+	<script>
+		const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+		if (savedTheme === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); }
+		function toggleTheme() {
+			const currentTheme = document.documentElement.getAttribute('data-theme');
+			const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+			document.documentElement.setAttribute('data-theme', newTheme);
+			localStorage.setItem('theme', newTheme);
+			document.getElementById('theme-icon').textContent = newTheme === 'dark' ? '☀️' : '🌙';
+		}
+		window.addEventListener('DOMContentLoaded', () => {
+			const theme = document.documentElement.getAttribute('data-theme') || 'light';
+			const icon = document.getElementById('theme-icon');
+			if(icon) { icon.textContent = theme === 'dark' ? '☀️' : '🌙'; }
+		});
+	</script>
 </head>
 <body>
+	<button class="theme-toggle" onclick="toggleTheme()" id="theme-icon" aria-label="Toggle Dark Mode"></button>
 	<div class="card">
 		<h2>📥 Send File to PC</h2>
 		<p>Select a file from your device to send.</p>
@@ -166,12 +186,32 @@ func main() {
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
-		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; }
+		:root { --bg-color: #ffffff; --text-color: #000000; }
+		:root[data-theme="dark"] { --bg-color: #1a1a1a; --text-color: #f0f0f0; }
+		body { font-family: sans-serif; padding: 20px; text-align: center; max-width: 600px; margin: auto; background-color: var(--bg-color); color: var(--text-color); transition: background-color 0.3s, color 0.3s; }
 		.btn { background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 16px; margin-top: 20px; text-decoration: none; display: inline-block; }
 		.btn:hover { background: #218838; }
+		.theme-toggle { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer; }
 	</style>
+	<script>
+		const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+		if (savedTheme === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); }
+		function toggleTheme() {
+			const currentTheme = document.documentElement.getAttribute('data-theme');
+			const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+			document.documentElement.setAttribute('data-theme', newTheme);
+			localStorage.setItem('theme', newTheme);
+			document.getElementById('theme-icon').textContent = newTheme === 'dark' ? '☀️' : '🌙';
+		}
+		window.addEventListener('DOMContentLoaded', () => {
+			const theme = document.documentElement.getAttribute('data-theme') || 'light';
+			const icon = document.getElementById('theme-icon');
+			if(icon) { icon.textContent = theme === 'dark' ? '☀️' : '🌙'; }
+		});
+	</script>
 </head>
 <body>
+	<button class="theme-toggle" onclick="toggleTheme()" id="theme-icon" aria-label="Toggle Dark Mode"></button>
 	<h2>✅ Success!</h2>
 	<p>Successfully uploaded: <strong>%s</strong></p>
 	<a href="/" class="btn">Upload Another File</a>
